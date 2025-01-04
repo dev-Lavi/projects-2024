@@ -38,26 +38,31 @@ function addTask() {
 }
 
 function displayTasks() {
-    todoList.innerHTML = "";
-    todo.forEach((item, index) => {
-        const p = document.createElement("p");
-        p.innerHTML = `
-          <div class="todo-container">
-            <input type="checkbox" class="todo-checkbox" id="input-${index}" ${
-          item.disabled ? "checked" : ""
-        }>
-            <p id="todo-${index}" class="${
-          item.disabled ? "disabled" : ""
-        }" onclick="editTask(${index})">${item.text}</p>
-          </div>
-        `;
-        p.querySelector(".todo-checkbox").addEventListener("change", () =>
-          toggleTask(index)
-        );
-        todoList.appendChild(p);
-      });
-      todoCount.textContent = todo.length;
+  todoList.innerHTML = "";
+  todo.forEach((item, index) => {
+    const container = document.createElement("div");
+    container.className = "todo-container";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "todo-checkbox";
+    checkbox.id = `input-${index}`;
+    checkbox.checked = item.disabled;
+    checkbox.addEventListener("change", () => toggleTask(index));
+
+    const task = document.createElement("p");
+    task.id = `todo-${index}`;
+    task.className = item.disabled ? "disabled" : "";
+    task.textContent = item.text;
+    task.addEventListener("click", () => editTask(index));
+
+    container.appendChild(checkbox);
+    container.appendChild(task);
+    todoList.appendChild(container);
+  });
+  todoCount.textContent = todo.length;
 }
+
 
 function editTask(index) {
     const todoItem = document.getElementById(`todo-${index}`);
